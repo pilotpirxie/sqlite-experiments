@@ -14,5 +14,15 @@
   "dependencies": {
     "better-sqlite3": "^8.6.0",
     "fastify": "^4.23.2"
-  }
+  },
+    "scripts": {
+      "ts-disk": "ts-node scenarios/disk.ts",
+      "ts-memory": "ts-node scenarios/memory.ts",
+      "ts-disk-wal": "ts-node scenarios/disk-wal.ts",
+      "ts-memory-wal": "ts-node scenarios/memory-wal.ts",
+      "js-disk": "node scenarios/disk.js",
+      "js-memory": "node scenarios/memory.js",
+      "js-disk-wal": "node scenarios/disk-wal.js",
+      "js-memory-wal": "node scenarios/memory-wal.js"
+    }
 }

@@ -1,14 +1,137 @@
 # sqlite-experiments
-Just bunch of experiments with sqlite3, better-sqlite3 and fastify.
+Just bunch of experiments with sqlite3, better-sqlite3 and fastify. Tested both with node (after tsc transpilation) and ts-node.
 
-## Read performance
+# Using node
 
-### Memory without WAL
+## Read performance (node)
 
 Run using:
 ```shell
 wrk -t10 -c400 -d10s http://localhost:3000/users
 ```
+
+### Memory without WAL
+
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.92ms    3.79ms 148.77ms   93.30%
+    Req/Sec   848.81     63.82     0.96k    88.90%
+  84608 requests in 10.03s, 707.32MB read
+  Socket errors: connect 0, read 711, write 0, timeout 0
+Requests/sec:   8436.86
+Transfer/sec:     70.53MB
+```
+
+### Memory with WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    46.29ms    4.06ms 136.68ms   92.80%
+    Req/Sec     0.86k    69.54     1.01k    86.30%
+  85958 requests in 10.02s, 718.60MB read
+  Socket errors: connect 0, read 628, write 0, timeout 0
+Requests/sec:   8574.66
+Transfer/sec:     71.68MB
+```
+
+### Disk without WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    45.55ms    3.65ms 152.20ms   93.17%
+    Req/Sec     0.87k    63.68     0.99k    86.10%
+  87167 requests in 10.03s, 728.71MB read
+  Socket errors: connect 0, read 569, write 0, timeout 0
+Requests/sec:   8692.60
+Transfer/sec:     72.67MB
+```
+
+### Disk with WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    44.29ms    3.88ms 119.59ms   92.95%
+    Req/Sec     0.90k    67.05     0.98k    88.50%
+  89658 requests in 10.03s, 749.53MB read
+  Socket errors: connect 0, read 886, write 0, timeout 0
+Requests/sec:   8943.42
+Transfer/sec:     74.77MB
+```
+
+## Write performance (node)
+
+Run using:
+```shell
+wrk -t10 -c400 -d10s -s ./post.lua http://localhost:3000/users
+```
+
+### Memory without WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.52ms    2.03ms  44.80ms   83.41%
+    Req/Sec     3.19k   322.06     3.60k    91.70%
+  317686 requests in 10.01s, 68.06MB read
+  Socket errors: connect 0, read 726, write 0, timeout 0
+Requests/sec:  31721.49
+Transfer/sec:      6.80MB
+```
+
+### Memory with WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    12.44ms    1.93ms  47.34ms   84.48%
+    Req/Sec     3.21k   306.96     3.60k    92.70%
+  319804 requests in 10.01s, 68.52MB read
+  Socket errors: connect 0, read 463, write 0, timeout 0
+Requests/sec:  31935.43
+Transfer/sec:      6.84MB
+```
+
+### Disk without WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.69ms   10.39ms 212.21ms   95.22%
+    Req/Sec   398.25     27.51   505.00     84.50%
+  39729 requests in 10.03s, 8.48MB read
+  Socket errors: connect 0, read 698, write 0, timeout 0
+Requests/sec:   3959.62
+Transfer/sec:    865.09KB
+```
+
+### Disk with WAL
+```shell
+Running 10s test @ http://localhost:3000/users
+  10 threads and 400 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    17.23ms    2.01ms  55.81ms   86.41%
+    Req/Sec     2.32k   213.84     2.52k    94.90%
+  230538 requests in 10.02s, 49.36MB read
+  Socket errors: connect 0, read 475, write 0, timeout 0
+Requests/sec:  23017.65
+Transfer/sec:      4.93MB
+```
+
+# Using ts-node
+
+## Read performance (ts-node)
+
+Run using:
+```shell
+wrk -t10 -c400 -d10s http://localhost:3000/users
+```
+
+### Memory without WAL
 
 ```shell
 Running 10s test @ http://localhost:3000/users
@@ -61,7 +184,7 @@ Requests/sec:   7590.37
 Transfer/sec:     63.45MB
 ```
 
-## Write performance
+## Write performance (ts-node)
 
 Run using:
 ```shell
