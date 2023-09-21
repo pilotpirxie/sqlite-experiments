@@ -1,5 +1,5 @@
 # sqlite-experiments
-Just bunch of experiments with sqlite3, better-sqlite3 and fastify. Tested both with node (after tsc transpilation) and ts-node.
+Just bunch of experiments with SQLite3 using ``better-sqlite3`` and ``fastify``. Tested with both ``node`` (after ``tsc`` transpilation) and ``ts-node``.
 
 # Using node
 
