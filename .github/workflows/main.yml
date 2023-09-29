@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build app
+        run: npm run build # Change this to your specific build command if necessary
+
+      - name: Deploy to small.pl via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          script: |
+            # Adjusting node and npm version
+            mkdir -p ~/bin && ln -fs /usr/local/bin/node16 ~/bin/node && ln -fs /usr/local/bin/npm16 ~/bin/npm && source $HOME/.bash_profile
+
+            # Remove index.html
+            rm /usr/home/${{ secrets.REMOTE_USERNAME }}/domains/${{ secrets.DOMAIN }}/public_nodejs/public/index.html
+
+            # Replace with your build directory if necessary
+            rsync -av build/ /usr/home/${{ secrets.REMOTE_USERNAME }}/domains/${{ secrets.DOMAIN }}/public_nodejs
+
+            # Installing any global dependencies
+            npm install -g some-global-package # Replace with actual package names
+
+            # Set environment variables
+            echo 'export C=clang' >> $HOME/.bash_profile
+            echo 'export CXX=clang++' >> $HOME/.bash_profile
+            echo 'export CC=gcc' >> $HOME/.bash_profile
+            echo 'export CXX=g++' >> $HOME/.bash_profile
+            source $HOME/.bash_profile
+
+            # Restart the application
+            devil www restart ${{ secrets.DOMAIN }}
