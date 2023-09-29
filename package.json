@@ -23,6 +23,7 @@
       "js-disk": "node scenarios/disk.js",
       "js-memory": "node scenarios/memory.js",
       "js-disk-wal": "node scenarios/disk-wal.js",
-      "js-memory-wal": "node scenarios/memory-wal.js"
+      "js-memory-wal": "node scenarios/memory-wal.js",
+      "build": "tsc"
     }
 }
